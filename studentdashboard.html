@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Student Dashboard</title>
+    <style>
+        /* Basic styling for table */
+        body { font-family: Arial, sans-serif; background-color: #2e2e2e; color: #ffffff; }
+        .table-container { margin: 20px auto; width: 80%; }
+        .logout-container { text-align: right; margin: 20px; }
+        .logout-button { background-color: #515573; color: white; padding: 10px; border: none; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; background-color: #efdede; color: #333; }
+        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #45a6db; color: white; }
+        select { padding: 5px; }
+
+        .book-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .book-button:hover {
+            background-color: #45a049;
+        }
+
+        .promo-code-input {
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav id="navbar">
+              <div class="container">
+                  <h1 class="logo"><a href="index.html" style="padding: 15px;">Room Booking Management System</a></h1>
+                  <ul>
+                      <li><a href="index.html">Home</a></li>
+                      <li><a href="Admin.html">Staff</a></li>
+                      <li><a class="current" href="Student.html">Student</a></li>
+                  </ul>
+              </div>
+          </nav>
+      </header>
+
+    <!-- Logout button container -->
+    <div class="logout-container">
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="table-container">
+        <h2>Room Reservation</h2>
+        <table id="student-room-table">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Room No</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Capacity</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Promo Code</th>
+                    <th>Book</th>
+                </tr>
+            </thead>
+            <tbody id="room-table-body">
+                <!-- Room data will be injected here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Define the valid promo code
+        const validPromoCode = "DISCOUNT10";  // Define your promo code here
+
+        // Simulated data for rooms launched by the admin (this should be set to sessionStorage when available)
+        const launchedRooms = [
+            { roomNo: "101", location: "Building A", totalPeople: 4, price: 20000, status: "Not Checked-in", registeredDate: "2024-11-08", time: "10:00 AM" },
+            { roomNo: "102", location: "Building B", totalPeople: 2, price: 15000, status: "Not Checked-in", registeredDate: "2024-11-08", time: "2:00 PM" },
+            { roomNo: "103", location: "Building C", totalPeople: 3, price: 18000, status: "Not Checked-in", registeredDate: "2024-11-08", time: "4:00 PM" }
+        ];
+
+        // Function to display launched rooms with status dropdowns and promo code input
+        function displayLaunchedRooms() {
+            const tableBody = document.getElementById("room-table-body");
+            tableBody.innerHTML = ""; // Clear existing content
+            
+            // Simulate getting rooms from sessionStorage (if available)
+            const rooms = JSON.parse(sessionStorage.getItem("launchedRooms")) || launchedRooms;
+
+            // Loop through the rooms array and create table rows
+            rooms.forEach((room, index) => {
+                const row = document.createElement("tr");
+
+                // Create table cells for each property except for status
+                row.innerHTML = `
+                    <td>${room.location}</td>
+                    <td>${room.roomNo}</td>
+                    <td>${room.registeredDate}</td>
+                    <td>${room.time}</td>
+                    <td>${room.totalPeople}</td>
+                    <td>$${room.price}</td>
+                `;
+
+                // Create a dropdown for the status and set its initial value
+                const statusCell = document.createElement("td");
+                const statusSelect = document.createElement("select");
+                const notCheckedInOption = new Option("Not Checked-in", "Not Checked-in");
+                const checkedInOption = new Option("Checked-in", "Checked-in");
+                statusSelect.add(notCheckedInOption);
+                statusSelect.add(checkedInOption);
+                statusSelect.value = room.status;
+
+                // Event listener to update the room status in the data array when changed
+                statusSelect.addEventListener("change", () => {
+                    rooms[index].status = statusSelect.value;
+                    sessionStorage.setItem("launchedRooms", JSON.stringify(rooms));
+                });
+
+                statusCell.appendChild(statusSelect);
+                row.appendChild(statusCell);
+
+                // Add promo code input field and validation
+                const promoCodeCell = document.createElement("td");
+                const promoCodeInput = document.createElement("input");
+                promoCodeInput.type = "text";
+                promoCodeInput.classList.add("promo-code-input");
+                promoCodeInput.placeholder = "Enter promo code";
+
+                // Create the "Check Promo Code" button
+                const checkPromoCodeButton = document.createElement("button");
+                checkPromoCodeButton.textContent = "Apply";
+                checkPromoCodeButton.classList.add("book-button"); // You can use the same style as "Book Room" button
+
+                const errorMessage = document.createElement("span");
+                errorMessage.classList.add("error");
+
+                // Create "Book Room" button and add it to the row
+                const bookCell = document.createElement("td");
+                const bookButton = document.createElement("button");
+                bookButton.textContent = "Book Room";
+                bookButton.classList.add("book-button");
+
+                bookButton.addEventListener("click", function () {
+                    const enteredCode = promoCodeInput.value.trim();
+
+                    // Book room logic (does not check promo code anymore)
+                    if (enteredCode === validPromoCode) {
+                        const discountedPrice = room.price - (room.price * 0.1);  // Apply 10% discount
+                        alert(`Promo code applied! Room booked successfully! Final Price: $${discountedPrice}`);
+                        sessionStorage.setItem("bookedRoom", JSON.stringify({...room, finalPrice: discountedPrice}));
+                        window.location.href = 'paymentpage.html';  // Redirect to payment page
+                    } else {
+                        alert("Room booked successfully! No promo code applied.");
+                        sessionStorage.setItem("bookedRoom", JSON.stringify(room));
+                        window.location.href = 'paymentpage.html';  // Redirect to payment page
+                    }
+                });
+
+                // Check Promo Code button event
+                checkPromoCodeButton.addEventListener("click", function () {
+                    const enteredCode = promoCodeInput.value.trim();
+
+                    if (enteredCode === validPromoCode) {
+                        alert("Promo code is valid!");
+                    } else if (enteredCode) {
+                        alert("Invalid promo code.");
+                    } else {
+                        alert("Please enter a promo code.");
+                    }
+                });
+
+                promoCodeCell.appendChild(promoCodeInput);
+                promoCodeCell.appendChild(checkPromoCodeButton); // Add the "Check Promo Code" button
+                promoCodeCell.appendChild(errorMessage);
+                bookCell.appendChild(bookButton);
+                row.appendChild(promoCodeCell);
+                row.appendChild(bookCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Call the function to display rooms when the page loads
+        document.addEventListener("DOMContentLoaded", displayLaunchedRooms);
+
+        // Logout function to redirect to the homepage
+        function logout() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

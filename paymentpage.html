@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background:#444;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .success-box {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .success-box h1 {
+            margin-bottom: 20px;
+        }
+
+        .success-box p {
+            font-size: 18px;
+        }
+
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            background-color: #45a6db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #1e80b0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="success-box">
+            <h1>Payment Successful</h1>
+            <p>Thank you for your payment! Your transaction was completed successfully.</p>
+            <p class="amount" id="amountPaid">Amount Paid: $0.00</p>
+            <button class="back-button" onclick="window.location.href='studentdashboard.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Retrieve the booked room data from sessionStorage
+            const bookedRoom = JSON.parse(sessionStorage.getItem("bookedRoom"));
+
+            // If a room exists, calculate and display the price
+            if (bookedRoom) {
+                let amountPaid = bookedRoom.price;  // Original price of the room
+
+                // Check if the promo code was used and apply discount if necessary
+                if (bookedRoom.finalPrice) {
+                    // If finalPrice exists, it means the promo code was used
+                    amountPaid = bookedRoom.finalPrice;
+                }
+
+                // Display the amount paid (either discounted or full price)
+                document.getElementById("amountPaid").textContent = `Amount Paid: $${parseFloat(amountPaid).toFixed(2)}`;
+            } else {
+                // If no booked room data is found, redirect to the homepage
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+</body>
+</html>

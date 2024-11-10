@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="nil">
+    <meta name="keywords" content="Kafic">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+    <meta name="description" content="Login - Register Template">
+    <meta name="author" content="Lorenzo Angelino aka MrLolok">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <style>
+        body {
+            background-color: #303641;
+        }
+
+        #errorMessage {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav id="navbar">
+            <div class="container" style="display: flex; align-items: center; width: 100%;">
+                <h1 class="logo" style="padding: 0% 2%;"><a href="index.html">Room Booking Management System</a></h1>
+                <ul style="margin-left: auto;">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a class="current" href="Admin.html">Staff</a></li>
+                    <li><a href="Student.html">Student</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <br/>
+    <br/>
+
+    <div id="container-login">
+        <div id="title">
+            <i class="material-icons lock">lock</i> Staff Login
+        </div>
+
+        <!-- Added id="adminLoginForm" to the form -->
+        <form id="adminLoginForm" action="Admin" method="post">
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">face</i>
+                </div>
+                <input name="username" id="username" placeholder="Staff name" type="text" required class="validate"
+                    autocomplete="off">
+            </div>
+
+            <div class="input">
+                <div class="input-addon">
+                    <i class="material-icons">vpn_key</i>
+                </div>
+                <input name="pwd" id="password" placeholder="Password" type="password" required class="validate"
+                    autocomplete="off">
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox">
+                <span style="color: #DDD">Remember Me</span>
+            </div>
+
+            <!-- Updated Submit button to properly submit the form -->
+            <button type="submit" id="submit-button">Submit</button>
+        </form>
+        <span id="errorMessage"></span>
+        <br/>
+        <div class="forgot-password">
+            <a href="#">Forgot your password?</a>
+        </div>
+        <div class="privacy">
+            <a href="#">Privacy Policy</a>
+        </div>
+
+        <div class="register">
+            Register an account here
+            <a href="AdminSignup.html"><button id="register-link">Register</button></a>
+        </div>
+    </div>
+
+    <script>
+        // Get the login form
+        const loginForm = document.getElementById('adminLoginForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Validate the user credentials
+        function validateUser(event) {
+            // Prevent the form submission initially to check credentials
+            event.preventDefault();
+
+            // Get the values of username and password from the form fields
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Hardcoded valid credentials (for demonstration purposes)
+            const validUsername = 'staff';
+            const validPassword = 'password';
+
+            // Clear any previous error message
+            errorMessage.textContent = '';
+
+            // Validate username and password
+            if (username === validUsername && password === validPassword) {
+                // Credentials are correct, submit the form
+                window.location.href = 'admindashboard.html'; // Redirect to the admin dashboard
+            } else {
+                // If credentials are incorrect, show the error message
+                errorMessage.textContent = "Wrong username or password. Login is unsuccessful.";
+            }
+        }
+
+        loginForm.addEventListener('submit', validateUser);
+    </script>
+</body>
+
+</html>

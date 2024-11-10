@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="description" content="nil">
+        <link rel="stylesheet" href="style.css">
+        <title>Group Project for CSIT 214</title>
+        <meta name="author" content="Lee Xuan Xuan">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="main.css">
+        <style>
+            body {
+                background-color: #303641;
+            }
+
+            #slideshow {
+                position: relative;
+                width: 100%;
+                height: 400px;
+                overflow: hidden;
+            }
+
+            .slide {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-size:contain; 
+                background-repeat: repeat; 
+                background-position:center; 
+                opacity: 0;
+                transition: opacity 1.5s ease-in-out;
+                visibility: hidden;
+            }
+
+            .slide.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav id="navbar">
+                <div class="container" style="display: flex; align-items: center; width: 100%;">
+                    <h1 class="logo" style="padding: 0% 2%;"><a href="index.html">Room Booking Management System</a></h1>
+                    <ul style="margin-left: auto;">
+                        <li><a class="current" href="index.html">Home</a></li>
+                        <li><a href="Admin.html">Staff</a></li>
+                        <li><a href="Student.html">Student</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Slideshow Section -->
+        <div id="slideshow">
+            <div class="slide active" style="background-image: url('images/studyroom1.jpg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom2.jpg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom3.jpg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom4.jpg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom5.jpg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom6.jpeg');"></div>
+            <div class="slide" style="background-image: url('images/studyroom7.jpeg');"></div>
+        </div>
+        <div id="showcase">
+            <div class="container">
+                <div class="showcase-content">
+                    <br/>
+                    <h1 style="color: #f7c08a; font-size: 50px;">Book your room today!</h1> 
+                    <p>Meeting our student's needs is our highest priority.</p>
+                    <a href="https://www.uow.edu.au/" target="_blank" type="button" class="btn">Learn More about UOW</a>
+                </div>
+            </div>
+        </div>  
+        <script>
+            // Get all the slides
+            const slides = document.querySelectorAll('.slide'); 
+            let currentSlide = 0;
+
+            // Function to show the next slide
+            function showNextSlide() {
+                // Remove the active class from the current slide
+                slides[currentSlide].classList.remove('active');
+
+                // Move to the next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+
+                // Add the active class to the next slide
+                slides[currentSlide].classList.add('active');
+            }
+
+            // Set an interval to change the slide every 4 seconds
+            setInterval(showNextSlide, 4000);
+        </script>
+    </body>
+</html>
